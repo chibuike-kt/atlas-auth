@@ -11,7 +11,7 @@ This project is suitable as:
 
 ---
 
-## ✨ Features
+## Features
 
 ### Core Authentication
 
@@ -60,7 +60,7 @@ This project is suitable as:
 
 ---
 
-## 🧱 Tech Stack
+## Tech Stack
 
 * **PHP 8.2+**
 * **MySQL / MariaDB**
@@ -70,7 +70,7 @@ This project is suitable as:
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 atlas-auth/
@@ -109,7 +109,7 @@ atlas-auth/
 
 ---
 
-## 🔐 Security Design (Important)
+## Security Design (Important)
 
 ### Passwords
 
@@ -139,7 +139,7 @@ atlas-auth/
 
 ---
 
-## ⚙️ Environment Configuration
+## Environment Configuration
 
 Create `.env` from `.env.example`:
 
@@ -161,7 +161,7 @@ SESSION_ABSOLUTE_TIMEOUT_SECONDS=28800
 
 ---
 
-## 🗄️ Database Setup
+## Database Setup
 
 1. Create database:
 
@@ -177,7 +177,7 @@ php public/migrate.php
 
 ---
 
-## 🚀 Running Locally
+## Running Locally
 
 ```bash
 composer install
@@ -192,7 +192,7 @@ Visit:
 
 ---
 
-## 📬 Email (Dev Mode)
+## Email (Dev Mode)
 
 Email verification and password reset links are logged to:
 
@@ -211,7 +211,7 @@ SMTP can be added later without changing the auth flow.
 
 ---
 
-## 🧪 Tested Scenarios
+## Tested Scenarios
 
 * Login brute-force attempts
 * Password reset replay attacks
@@ -222,7 +222,7 @@ SMTP can be added later without changing the auth flow.
 
 ---
 
-## 🧭 Roadmap (Optional Extensions)
+## Roadmap (Optional Extensions)
 
 * TOTP / Authenticator App 2FA
 * Device/session list with per-device revoke
@@ -232,13 +232,13 @@ SMTP can be added later without changing the auth flow.
 
 ---
 
-## 📜 License
+## License
 
 MIT — free to use, modify, and deploy.
 
 ---
 
-## 👤 Author
+## Author
 
 Built by **Chibuike**
 Focused on security-first backend systems and clean architecture.
