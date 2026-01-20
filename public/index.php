@@ -12,6 +12,14 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Middleware\Authenticate;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Middleware\VerifiedEmail;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Middleware\SessionTimeout;
+use App\Http\Middleware\EnforceSessionVersion;
+use App\Http\Controllers\Auth\LogoutEverywhereController;
+
+
+
 
 
 require __DIR__ . '/../bootstrap/app.php';
@@ -33,6 +41,11 @@ $register = new RegisterController();
 $login = new LoginController();
 $logout = new LogoutController();
 $verify = new VerifyEmailController();
+$forgot = new ForgotPasswordController();
+$reset = new ResetPasswordController();
+$logoutEverywhere = new LogoutEverywhereController();
+
+
 
 
 // Routes
@@ -41,12 +54,21 @@ $router->post('/login', fn($req) => $login->store($req));
 $router->get('/verify-notice', fn() => $verify->notice());
 $router->post('/resend-verification', fn($req) => $verify->resend($req));
 $router->get('/verify-email', fn($req) => $verify->verify($req));
+$router->get('/forgot-password', fn() => $forgot->show());
+$router->post('/forgot-password', fn($req) => $forgot->send($req));
+
+$router->get('/reset-password', fn($req) => $reset->show($req));
+$router->post('/reset-password', fn($req) => $reset->update($req));
+$router->post('/logout-everywhere', fn() => $logoutEverywhere());
+
+
 
 
 $router->get('/register', fn() => $register->show());
 $router->post('/register', fn($req) => $register->store($req));
 
 $router->post('/logout', fn() => $logout());
+
 
 // Protected route
 $authMw = new Authenticate();
@@ -60,8 +82,11 @@ $router->get('/dashboard', function ($req) use ($authMw) {
 
 // Middleware pipeline (CSRF already protects POSTs)
 $middleware = [
+  new \App\Http\Middleware\SessionTimeout(),      // if you have it
+  new EnforceSessionVersion(),
   new CsrfMiddleware(),
 ];
+
 
 $kernel = array_reduce(
   array_reverse($middleware),

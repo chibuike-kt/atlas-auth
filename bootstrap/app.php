@@ -26,6 +26,9 @@ Config::init([
   'session.name' => Env::get('SESSION_NAME', 'atlas_session'),
   'session.secure' => Env::bool('SESSION_SECURE_COOKIE', false),
   'session.samesite' => Env::get('SESSION_SAMESITE', 'Lax'),
+  'session.idle_timeout' => (int) Env::get('SESSION_IDLE_TIMEOUT_SECONDS', '1800'),
+  'session.absolute_timeout' => (int) Env::get('SESSION_ABSOLUTE_TIMEOUT_SECONDS', '28800'),
+
 
   'csrf.ttl' => (int) Env::get('CSRF_TTL_SECONDS', '7200'),
 ]);

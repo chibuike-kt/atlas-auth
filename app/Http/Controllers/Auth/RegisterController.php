@@ -68,6 +68,8 @@ final class RegisterController
 
     // optional: auto-login then send to verify notice
     Auth::login($userId);
+    $_SESSION['_sv'] = 1; // new user default
+
     return Response::redirect('/verify-notice');
   }
 }

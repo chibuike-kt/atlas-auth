@@ -37,7 +37,7 @@ final class LoginController
     }
 
     $pdo = Connection::pdo();
-    $stmt = $pdo->prepare("SELECT id, password_hash, email_verified_at FROM users WHERE email = :email LIMIT 1");
+    $stmt = $pdo->prepare("SELECT id, password_hash, email_verified_at, session_version FROM users WHERE email = :email LIMIT 1");
     $stmt->execute([':email' => $email]);
     $user = $stmt->fetch();
 
@@ -64,6 +64,13 @@ final class LoginController
     // Success: clear limiter and login
     RateLimiter::clear($email);
     Auth::login((int)$user['id']);
+
+    if (!empty($request['input']['remember'])) {
+      \App\Infrastructure\Security\Cookies::setRemember(
+        \App\Domain\Auth\RememberMe::issue((int)$user['id'])
+      );
+    }
+
 
     // Rehash if needed
     if (Password::needsRehash((string)$user['password_hash'])) {

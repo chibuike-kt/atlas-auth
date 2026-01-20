@@ -20,7 +20,12 @@ final class Auth
   {
     SessionRegeneration::onPrivilegeChange();
     $_SESSION['user_id'] = $userId;
+
+    $_SESSION['_sess_started_at'] = time();
+    $_SESSION['_sess_last_activity'] = time();
+    $_SESSION['_sv'] = (int)$userId['session_version'];
   }
+
 
   public static function logout(): void
   {
