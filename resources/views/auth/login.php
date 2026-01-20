@@ -1,14 +1,19 @@
 <?php
 $title = 'Login';
+$errors = $errors ?? [];
+$old = $old ?? [];
 ob_start();
 ?>
 <h2>Login</h2>
-<p class="muted">Secure session + CSRF are already wired. Next we implement real auth.</p>
+
+<?php if (!empty($errors['login'])): ?>
+  <p style="color:#ff8a8a;"><?= htmlspecialchars($errors['login'], ENT_QUOTES, 'UTF-8') ?></p>
+<?php endif; ?>
 
 <form method="post" action="/login">
   <input type="hidden" name="_csrf" value="<?= htmlspecialchars($csrf ?? '', ENT_QUOTES, 'UTF-8') ?>">
   <label>Email</label>
-  <input name="email" type="email" autocomplete="email" required>
+  <input name="email" type="email" autocomplete="email" required value="<?= htmlspecialchars((string)($old['email'] ?? ''), ENT_QUOTES, 'UTF-8') ?>">
   <label>Password</label>
   <input name="password" type="password" autocomplete="current-password" required>
   <button type="submit">Continue</button>

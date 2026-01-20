@@ -29,20 +29,13 @@ final class Migrator
       $sql = file_get_contents($file);
       if ($sql === false) throw new \RuntimeException("Failed reading migration: {$filename}");
 
-      $pdo->beginTransaction();
-
       try {
+        // MySQL may implicitly commit during DDL, so do not rely on transactions here.
         $pdo->exec($sql);
 
         $ins = $pdo->prepare("INSERT INTO migrations (filename) VALUES (:f)");
         $ins->execute([':f' => $filename]);
-
-        $pdo->commit();
       } catch (\Throwable $e) {
-        if ($pdo->inTransaction()) {
-          $pdo->rollBack();
-        }
-
         $msg = "Migration failed: {$filename}\n" . $e->getMessage() . "\n";
         throw new \RuntimeException($msg, 0, $e);
       }

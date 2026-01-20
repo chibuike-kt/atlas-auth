@@ -3,11 +3,16 @@
 declare(strict_types=1);
 
 use App\Support\Router;
-use App\Support\Response;
 use App\Infrastructure\Security\Headers;
 use App\Http\Middleware\CsrfMiddleware;
-use App\Infrastructure\Security\Csrf;
-use App\Support\View;
+
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Middleware\Authenticate;
+use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Middleware\VerifiedEmail;
+
 
 require __DIR__ . '/../bootstrap/app.php';
 
@@ -23,14 +28,37 @@ $request = [
 
 $router = new Router();
 
-// Routes (placeholders for now)
-$router->get('/', fn() => Response::html(View::render('auth/login', ['csrf' => Csrf::token()])));
-$router->post('/login', fn() => Response::html("Login handler coming next.\n", 200, ['Content-Type' => 'text/plain; charset=utf-8']));
-$router->get('/register', fn() => Response::html(View::render('auth/register', ['csrf' => Csrf::token()])));
-$router->post('/register', fn() => Response::html("Register handler coming next.\n", 200, ['Content-Type' => 'text/plain; charset=utf-8']));
-$router->post('/logout', fn() => Response::html("Logout handler coming next.\n", 200, ['Content-Type' => 'text/plain; charset=utf-8']));
+// Controllers
+$register = new RegisterController();
+$login = new LoginController();
+$logout = new LogoutController();
+$verify = new VerifyEmailController();
 
-// Middleware pipeline
+
+// Routes
+$router->get('/', fn($req) => $login->show($req));
+$router->post('/login', fn($req) => $login->store($req));
+$router->get('/verify-notice', fn() => $verify->notice());
+$router->post('/resend-verification', fn($req) => $verify->resend($req));
+$router->get('/verify-email', fn($req) => $verify->verify($req));
+
+
+$router->get('/register', fn() => $register->show());
+$router->post('/register', fn($req) => $register->store($req));
+
+$router->post('/logout', fn() => $logout());
+
+// Protected route
+$authMw = new Authenticate();
+$router->get('/dashboard', function ($req) use ($authMw) {
+  return $authMw->handle($req, function () {
+    return \App\Support\Response::html(\App\Support\View::render('dashboard', [
+      'csrf' => \App\Infrastructure\Security\Csrf::token(),
+    ]));
+  });
+});
+
+// Middleware pipeline (CSRF already protects POSTs)
 $middleware = [
   new CsrfMiddleware(),
 ];

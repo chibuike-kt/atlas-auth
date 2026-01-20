@@ -1,18 +1,10 @@
+
 /vendor/
-/storage/*.key
-/storage/logs/
-/storage/sessions/
-/storage/cache/
-/storage/uploads/
+/storage/
+!/storage/.gitkeep
+!/storage/logs/.gitkeep
+!/storage/sessions/.gitkeep
+!/storage/cache/.gitkeep
 
-/.env
-/.env.*
-/.phpunit.result.cache
-
-# IDE
-/.idea/
-/.vscode/
-
-# OS
-.DS_Store
-Thumbs.db
+.env
+.env.*
